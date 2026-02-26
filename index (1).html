@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margaret Northup — Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg: #07050a;
+  --orange: #ff4d00;
+  --pink:   #ff2d78;
+  --magenta:#d43cff;
+  --violet: #7b5fff;
+  --text:   #f0eaf8;
+  --muted:  #9a8fab;
+  --dim:    #3d2f4a;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* GRAIN */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1000; opacity: 0.6;
+}
+
+/* CURSOR */
+#cursor {
+  position: fixed; width: 12px; height: 12px;
+  background: var(--pink); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .2s, height .2s, background .2s, transform .2s;
+  mix-blend-mode: screen;
+}
+#cursor-trail {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid var(--pink); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: all .12s ease; opacity: .4;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 56px;
+}
+nav::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, var(--bg) 30%, transparent);
+  pointer-events: none;
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: .08em;
+  color: var(--text); text-decoration: none;
+  position: relative; z-index: 1;
+}
+.nav-logo em {
+  background: linear-gradient(90deg, var(--orange), var(--pink), var(--magenta));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; font-style: normal;
+}
+.nav-links { display: flex; gap: 40px; list-style: none; position: relative; z-index: 1; }
+.nav-links a {
+  font-size: .78rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* SECTIONS */
+section { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; padding: 0 56px; }
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: 120px; padding-bottom: 80px; position: relative;
+}
+
+/* Stacked glowing layers */
+.hero-layers {
+  position: absolute; right: -40px; top: 50%;
+  transform: translateY(-50%) rotate(-20deg);
+  width: 500px; height: 260px; pointer-events: none;
+}
+.layer {
+  position: absolute; width: 112px; height: 112px; border-radius: 8px;
+  opacity: 0; animation: stackIn .8s forwards;
+}
+.layer:nth-child(1)  { background:#ff4d00; box-shadow:0 0 50px #ff4d00bb; left:0;    top:70px; animation-delay:.05s; }
+.layer:nth-child(2)  { background:#ff5510; box-shadow:0 0 36px #ff5510aa; left:18px; top:62px; animation-delay:.10s; }
+.layer:nth-child(3)  { background:#ff5e1e; box-shadow:0 0 30px #ff5e1e99; left:36px; top:54px; animation-delay:.15s; }
+.layer:nth-child(4)  { background:#ff3060; box-shadow:0 0 30px #ff306099; left:54px; top:46px; animation-delay:.20s; }
+.layer:nth-child(5)  { background:#ff2d78; box-shadow:0 0 36px #ff2d78aa; left:72px; top:38px; animation-delay:.25s; }
+.layer:nth-child(6)  { background:#f030a0; box-shadow:0 0 30px #f030a099; left:90px; top:30px; animation-delay:.30s; }
+.layer:nth-child(7)  { background:#e040be; box-shadow:0 0 28px #e040be88; left:108px;top:22px; animation-delay:.35s; }
+.layer:nth-child(8)  { background:#cc3fd6; box-shadow:0 0 28px #cc3fd688; left:126px;top:14px; animation-delay:.40s; }
+.layer:nth-child(9)  { background:#b840e8; box-shadow:0 0 28px #b840e888; left:144px;top:6px;  animation-delay:.45s; }
+.layer:nth-child(10) { background:#a040f0; box-shadow:0 0 28px #a040f088; left:162px;top:-2px; animation-delay:.50s; }
+.layer:nth-child(11) { background:#8a44f4; box-shadow:0 0 26px #8a44f488; left:180px;top:-10px;animation-delay:.55s; }
+.layer:nth-child(12) { background:#7b5fff; box-shadow:0 0 26px #7b5fff88; left:198px;top:-18px;animation-delay:.60s; }
+@keyframes stackIn {
+  from { opacity:0; transform:translateX(-14px) scale(.88); }
+  to   { opacity:1; transform:translateX(0) scale(1); }
+}
+
+/* Motion streaks */
+.hero-chroma { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:-1; }
+.streak {
+  position: absolute; width: 160%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--orange) 20%, var(--pink) 50%, var(--magenta) 80%, transparent);
+  filter: blur(3px); opacity: 0;
+  animation: streakMove 7s ease-in-out infinite;
+  transform-origin: left center;
+}
+.streak:nth-child(1){ top:18%; transform:rotate(-13deg); animation-delay:0s;   height:2px; }
+.streak:nth-child(2){ top:34%; transform:rotate(-13deg); animation-delay:1.5s; height:5px; filter:blur(7px); }
+.streak:nth-child(3){ top:52%; transform:rotate(-13deg); animation-delay:3s;   height:2px; }
+.streak:nth-child(4){ top:68%; transform:rotate(-13deg); animation-delay:4.5s; height:7px; filter:blur(10px); }
+@keyframes streakMove {
+  0%   { opacity:0; transform:rotate(-13deg) translateX(-25%); }
+  25%  { opacity:.55; }
+  75%  { opacity:.35; }
+  100% { opacity:0;  transform:rotate(-13deg) translateX(5%); }
+}
+
+.hero-eyebrow {
+  font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:20px;
+  opacity:0; animation:fadeUp .7s .3s forwards;
+  display:flex; align-items:center; gap:12px;
+}
+.hero-eyebrow::before {
+  content:''; width:28px; height:1px;
+  background:linear-gradient(to right, var(--orange), var(--pink));
+}
+.hero-name {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:clamp(5rem,11vw,9.5rem);
+  line-height:.9; letter-spacing:.02em; color:var(--text);
+  opacity:0; animation:fadeUp .7s .5s forwards;
+}
+.hero-name .grad {
+  display:block;
+  background:linear-gradient(100deg, var(--orange) 0%, var(--pink) 40%, var(--magenta) 70%, var(--violet) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 32px #ff2d7860);
+}
+.hero-sub {
+  margin-top:30px; max-width:480px;
+  font-size:1rem; font-weight:300; color:var(--muted); line-height:1.75;
+  opacity:0; animation:fadeUp .7s .7s forwards;
+}
+.hero-sub strong { color:var(--text); font-weight:500; }
+.hero-ctas {
+  margin-top:44px; display:flex; gap:14px; flex-wrap:wrap;
+  opacity:0; animation:fadeUp .7s .9s forwards;
+}
+.btn-chroma {
+  padding:13px 30px;
+  background:linear-gradient(135deg, var(--orange), var(--pink), var(--magenta));
+  color:#fff; border-radius:3px; text-decoration:none;
+  font-size:.82rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+  position:relative; overflow:hidden;
+  transition:transform .2s, box-shadow .2s;
+  box-shadow:0 0 30px #ff2d7850;
+}
+.btn-chroma::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, var(--magenta), var(--violet));
+  opacity:0; transition:opacity .3s;
+}
+.btn-chroma:hover { transform:translateY(-2px); box-shadow:0 0 60px #ff2d7870; }
+.btn-chroma:hover::before { opacity:1; }
+.btn-chroma span { position:relative; z-index:1; }
+.btn-out {
+  padding:13px 30px; border:1px solid var(--dim);
+  color:var(--muted); border-radius:3px; text-decoration:none;
+  font-size:.82rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+  transition:border-color .2s, color .2s;
+}
+.btn-out:hover { border-color:var(--pink); color:var(--text); }
+
+/* SECTION LABELS */
+.s-label {
+  font-size:.7rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:10px;
+  display:flex; align-items:center; gap:10px;
+}
+.s-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right, var(--dim), transparent); }
+.s-title {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:clamp(2.8rem,5vw,4.2rem);
+  letter-spacing:.04em; line-height:1;
+  margin-bottom:52px; color:var(--text);
+}
+
+/* ABOUT */
+#about { padding-top:140px; padding-bottom:120px; }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.about-text p { font-size:1rem; line-height:1.8; color:var(--muted); margin-bottom:18px; }
+.about-text p strong { color:var(--text); font-weight:500; }
+.about-stats { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.stat {
+  padding:24px; border:1px solid var(--dim); border-radius:4px;
+  background:#0f0812; transition:border-color .3s, transform .3s;
+}
+.stat:hover { border-color:var(--pink); transform:translateY(-3px); }
+.stat-n {
+  font-family:'Bebas Neue', sans-serif; font-size:2.6rem; letter-spacing:.03em;
+  background:linear-gradient(135deg, var(--orange), var(--pink));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; line-height:1; margin-bottom:6px;
+}
+.stat-l { font-size:.82rem; color:var(--muted); line-height:1.4; }
+
+/* SKILLS */
+#skills { padding-top:100px; padding-bottom:100px; }
+.skills-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+.skill-card {
+  padding:28px; border:1px solid var(--dim); border-radius:4px;
+  background:#0f0812; transition:border-color .3s; position:relative; overflow:hidden;
+}
+.skill-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(to right, var(--orange), var(--pink), var(--magenta));
+  transform:scaleX(0); transform-origin:left; transition:transform .4s;
+}
+.skill-card:hover { border-color:var(--pink); }
+.skill-card:hover::before { transform:scaleX(1); }
+.skill-card-title { font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--pink); margin-bottom:16px; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; }
+.chip { padding:4px 12px; border:1px solid var(--dim); border-radius:2px; font-size:.8rem; color:var(--muted); }
+.chip.hot { border-color:#ff2d7840; color:var(--text); background:#ff2d7812; }
+
+/* PROJECTS */
+#projects { padding-top:100px; padding-bottom:100px; }
+.projects-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.proj {
+  background:#0f0812; border:1px solid var(--dim); border-radius:4px;
+  padding:36px; text-decoration:none; color:inherit;
+  display:flex; flex-direction:column; gap:14px;
+  transition:border-color .3s, transform .3s; position:relative; overflow:hidden;
+}
+.proj::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(to right, var(--orange), var(--pink), var(--magenta), var(--violet));
+  transform:scaleX(0); transform-origin:left; transition:transform .4s;
+}
+.proj:hover { border-color:var(--pink); transform:translateY(-4px); }
+.proj:hover::after { transform:scaleX(1); }
+.proj.wide { grid-column:span 2; display:grid; grid-template-columns:1fr auto; align-items:start; gap:40px; }
+
+.p-icon { width:48px; height:30px; position:relative; margin-bottom:4px; }
+.pl { position:absolute; width:28px; height:28px; border-radius:3px; }
+.pl:nth-child(1){ background:var(--orange); left:0;   top:0;   opacity:.9; }
+.pl:nth-child(2){ background:var(--pink);   left:8px; top:-3px;opacity:.8; }
+.pl:nth-child(3){ background:var(--magenta);left:16px;top:-6px;opacity:.7; }
+
+.proj-name { font-family:'Bebas Neue', sans-serif; font-size:1.5rem; letter-spacing:.05em; color:var(--text); }
+.proj-desc { font-size:.9rem; color:var(--muted); line-height:1.65; }
+.proj-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:auto; }
+.p-tag { padding:3px 10px; border:1px solid var(--dim); border-radius:2px; font-size:.74rem; color:var(--dim); letter-spacing:.04em; text-transform:uppercase; }
+.proj-arr { font-size:1.4rem; color:var(--pink); opacity:0; transition:opacity .2s, transform .2s; align-self:start; }
+.proj:hover .proj-arr { opacity:1; transform:translate(3px,-3px); }
+
+/* EXPERIENCE */
+#experience { padding-top:100px; padding-bottom:100px; }
+.timeline { padding-left:24px; position:relative; }
+.timeline::before {
+  content:''; position:absolute; left:0; top:6px; bottom:0; width:1px;
+  background:linear-gradient(to bottom, var(--pink), transparent);
+}
+.t-item {
+  position:relative; margin-bottom:48px;
+  opacity:0; transform:translateX(-10px);
+  transition:opacity .5s, transform .5s;
+}
+.t-item.visible { opacity:1; transform:none; }
+.t-item::before {
+  content:''; position:absolute; left:-28px; top:7px;
+  width:8px; height:8px; border-radius:50%;
+  background:var(--pink); box-shadow:0 0 12px var(--pink);
+}
+.t-meta { display:flex; align-items:baseline; flex-wrap:wrap; gap:10px; margin-bottom:8px; }
+.t-title { font-family:'Bebas Neue', sans-serif; font-size:1.15rem; letter-spacing:.04em; color:var(--text); }
+.t-co { font-size:.85rem; font-weight:500; color:var(--pink); }
+.t-date { font-size:.78rem; color:var(--muted); margin-left:auto; }
+.t-list { list-style:none; }
+.t-list li { font-size:.88rem; color:var(--muted); line-height:1.65; padding:3px 0 3px 16px; position:relative; }
+.t-list li::before { content:'›'; position:absolute; left:0; color:var(--orange); font-size:1rem; top:2px; }
+
+/* CERTS */
+#certs { padding-top:80px; padding-bottom:80px; }
+.certs-row { display:flex; gap:14px; }
+.cert {
+  flex:1; padding:28px 32px; border:1px solid var(--dim); border-radius:4px;
+  background:#0f0812; display:flex; align-items:center; gap:20px;
+  transition:border-color .3s, transform .3s; position:relative; overflow:hidden;
+}
+.cert::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,#ff4d0008,#ff2d7808,#d43cff08);
+  opacity:0; transition:opacity .3s;
+}
+.cert:hover { border-color:var(--magenta); transform:translateY(-3px); }
+.cert:hover::before { opacity:1; }
+.cert-badge {
+  font-size:2rem; width:52px; height:52px;
+  display:flex; align-items:center; justify-content:center;
+  background:#1a0f24; border-radius:4px; border:1px solid var(--dim); flex-shrink:0;
+}
+.cert-name { font-family:'Bebas Neue', sans-serif; font-size:1.1rem; letter-spacing:.05em; color:var(--text); margin-bottom:4px; }
+.cert-issuer { font-size:.82rem; color:var(--magenta); }
+.cert-year { font-size:.75rem; color:var(--muted); margin-top:2px; }
+
+/* CONTACT */
+#contact { padding-top:120px; padding-bottom:140px; text-align:center; }
+.contact-inner { max-width:600px; margin:0 auto; }
+.chroma-bar {
+  width:180px; height:5px;
+  background:linear-gradient(90deg, var(--orange), var(--pink), var(--magenta), var(--violet));
+  border-radius:3px; margin:0 auto 40px;
+  filter:blur(1px); box-shadow:0 0 20px #ff2d7860;
+}
+.contact-sub { font-size:1rem; color:var(--muted); line-height:1.7; margin-bottom:44px; }
+.c-links { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-bottom:40px; }
+.c-link {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:11px 22px; border:1px solid var(--dim); border-radius:3px;
+  color:var(--muted); text-decoration:none; font-size:.8rem;
+  letter-spacing:.06em; text-transform:uppercase;
+  transition:border-color .2s, color .2s, background .2s;
+}
+.c-link:hover { border-color:var(--pink); color:var(--text); background:#ff2d780a; }
+.relo {
+  display:inline-block; padding:9px 22px;
+  border:1px solid #ff4d0040; background:#ff4d0010;
+  border-radius:2px; font-size:.78rem; color:var(--orange);
+  letter-spacing:.1em; text-transform:uppercase;
+}
+
+/* FOOTER */
+footer {
+  position:relative; z-index:1;
+  border-top:1px solid var(--dim); padding:28px 56px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:.75rem; color:var(--dim);
+}
+footer a { color:var(--pink); text-decoration:none; }
+footer a:hover { color:var(--magenta); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0; transform:translateY(20px); transition:opacity .6s, transform .6s; }
+.reveal.visible { opacity:1; transform:none; }
+
+/* MOBILE */
+@media(max-width:768px){
+  nav { padding:18px 24px; }
+  .nav-links { display:none; }
+  section { padding:0 24px; }
+  .hero-layers { display:none; }
+  .about-grid,.skills-grid,.projects-grid { grid-template-columns:1fr; }
+  .proj.wide { grid-column:span 1; grid-template-columns:1fr; }
+  .certs-row { flex-direction:column; }
+  footer { flex-direction:column; gap:8px; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<nav>
+  <a href="#hero" class="nav-logo">MN<em>.</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-chroma">
+    <div class="streak"></div><div class="streak"></div>
+    <div class="streak"></div><div class="streak"></div>
+  </div>
+  <div class="hero-layers" aria-hidden="true">
+    <div class="layer"></div><div class="layer"></div><div class="layer"></div>
+    <div class="layer"></div><div class="layer"></div><div class="layer"></div>
+    <div class="layer"></div><div class="layer"></div><div class="layer"></div>
+    <div class="layer"></div><div class="layer"></div><div class="layer"></div>
+  </div>
+  <div class="hero-eyebrow">Frontend Developer · Open to Relocation</div>
+  <h1 class="hero-name">
+    Margaret
+    <span class="grad">Northup.</span>
+  </h1>
+  <p class="hero-sub">
+    Transitioning from 8 years in technical recruiting at <strong>AWS, Meta,</strong> and others.<br>
+    I know how engineering teams work. Now I'm building for them.
+  </p>
+  <div class="hero-ctas">
+    <a href="#projects" class="btn-chroma"><span>View Work</span></a>
+    <a href="#contact" class="btn-out">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+      Contact
+    </a>
+    <a href="https://github.com/margaretnorthup" target="_blank" class="btn-out">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-label reveal">About</div>
+  <h2 class="s-title reveal">Background.</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>Transitioning into frontend development after 8 years as a Senior Technical Recruiter. Worked inside engineering orgs at <strong>AWS, Meta, C Spire,</strong> and several startups — hiring developers, sitting in on technical interviews, learning how good teams operate.</p>
+      <p>Currently completing a <strong>Full Stack Engineering</strong> cert through Codecademy and <strong>AI Engineering & Prompt Engineering</strong> certs through Databricks, both 2026.</p>
+      <p>Based in Franklin, TN. <strong>Open to relocation.</strong></p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="stat"><div class="stat-n">8+</div><div class="stat-l">Years inside tech orgs as a senior recruiter</div></div>
+      <div class="stat"><div class="stat-n">5</div><div class="stat-l">Languages and frameworks in active use</div></div>
+      <div class="stat"><div class="stat-n">2026</div><div class="stat-l">Full Stack + AI Engineering certifications</div></div>
+      <div class="stat"><div class="stat-n">Open</div><div class="stat-l">To relocation anywhere in the US</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="s-label reveal">Skills</div>
+  <h2 class="s-title reveal">What I work with.</h2>
+  <div class="skills-grid reveal">
+    <div class="skill-card">
+      <div class="skill-card-title">Languages & Frameworks</div>
+      <div class="chips">
+        <span class="chip hot">HTML5</span><span class="chip hot">CSS3</span>
+        <span class="chip hot">JavaScript ES6+</span><span class="chip hot">React</span>
+        <span class="chip">Python</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">Tools & Workflow</div>
+      <div class="chips">
+        <span class="chip hot">Git</span><span class="chip hot">GitHub</span>
+        <span class="chip">VS Code</span><span class="chip">Responsive Design</span>
+        <span class="chip">REST APIs</span><span class="chip">GitHub Pages</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">AI & Emerging Tech</div>
+      <div class="chips">
+        <span class="chip hot">Prompt Engineering</span><span class="chip hot">Databricks</span>
+        <span class="chip">AI-assisted Dev</span><span class="chip">LLM APIs</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">Industry Knowledge</div>
+      <div class="chips">
+        <span class="chip">Engineering Team Structures</span>
+        <span class="chip">Technical Communication</span>
+        <span class="chip">Agile</span>
+        <span class="chip">Cross-functional Collaboration</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="s-label reveal">Projects</div>
+  <h2 class="s-title reveal">Work.</h2>
+  <div class="projects-grid">
+    <a href="https://margaretnorthup1.github.io/" target="_blank" class="proj wide reveal">
+      <div>
+        <div class="p-icon"><div class="pl"></div><div class="pl"></div><div class="pl"></div></div>
+        <div class="proj-name" style="margin-top:14px">Portfolio Site</div>
+        <p class="proj-desc">Built from scratch. HTML, CSS, JavaScript. Fully responsive. Deployed on GitHub Pages.</p>
+        <div class="proj-tags" style="margin-top:18px">
+          <span class="p-tag">HTML5</span><span class="p-tag">CSS3</span>
+          <span class="p-tag">JavaScript</span><span class="p-tag">GitHub Pages</span><span class="p-tag">Responsive</span>
+        </div>
+      </div>
+      <div class="proj-arr">↗</div>
+    </a>
+    <a href="https://github.com/margaretnorthup" target="_blank" class="proj reveal">
+      <div class="p-icon"><div class="pl"></div><div class="pl"></div><div class="pl"></div></div>
+      <div class="proj-name">GitHub</div>
+      <p class="proj-desc">Active repos in React, JavaScript, and Python. Updated regularly.</p>
+      <div class="proj-tags">
+        <span class="p-tag">React</span><span class="p-tag">JS</span>
+        <span class="p-tag">Python</span><span class="p-tag">Git</span>
+      </div>
+      <div class="proj-arr">↗</div>
+    </a>
+    <div class="proj reveal" style="border-style:dashed;cursor:default;">
+      <div class="p-icon">
+        <div class="pl" style="opacity:.3"></div>
+        <div class="pl" style="opacity:.2"></div>
+        <div class="pl" style="opacity:.15"></div>
+      </div>
+      <div class="proj-name">In Progress</div>
+      <p class="proj-desc">Full-stack projects in development. Codecademy curriculum. Check GitHub for updates.</p>
+      <div class="proj-tags">
+        <span class="p-tag">Full Stack</span><span class="p-tag">React</span><span class="p-tag">WIP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="s-label reveal">Experience</div>
+  <h2 class="s-title reveal">Where I've worked.</h2>
+  <div class="timeline reveal">
+    <div class="t-item">
+      <div class="t-meta">
+        <span class="t-title">Technical Recruiter</span>
+        <span class="t-co">SLAY Recruiting</span>
+        <span class="t-date">Jun 2024 – Present · Franklin, TN</span>
+      </div>
+      <ul class="t-list">
+        <li>Sourced and placed frontend, backend, and full-stack engineers for contract and permanent roles.</li>
+        <li>B2B staffing across software, media, and marketing companies.</li>
+      </ul>
+    </div>
+    <div class="t-item">
+      <div class="t-meta">
+        <span class="t-title">Digital Marketing Recruiter / HR Business Partner</span>
+        <span class="t-co">Symposia Labs</span>
+        <span class="t-date">Aug 2023 – May 2024 · Holland, MI</span>
+      </div>
+      <ul class="t-list">
+        <li>Owned full-cycle recruitment for 3 startups simultaneously, intake through onboarding.</li>
+        <li>Weekly syncs with engineering hiring managers on pipeline, role specs, and technical fit.</li>
+      </ul>
+    </div>
+    <div class="t-item">
+      <div class="t-meta">
+        <span class="t-title">Senior Technical Recruiter</span>
+        <span class="t-co">C Spire</span>
+        <span class="t-date">Jan 2023 – Aug 2023 · Ridgeland, MS</span>
+      </div>
+      <ul class="t-list">
+        <li>Filled SDE roles across four application teams, hitting record time-to-hire.</li>
+      </ul>
+    </div>
+    <div class="t-item">
+      <div class="t-meta">
+        <span class="t-title">Sourcing Recruiter</span>
+        <span class="t-co">Meta</span>
+        <span class="t-date">Feb 2022 – Jul 2022 · Menlo Park, CA</span>
+      </div>
+      <ul class="t-list">
+        <li>Recruited Data Center Architects for infrastructure expansion. Niche sourcing in a competitive market.</li>
+      </ul>
+    </div>
+    <div class="t-item">
+      <div class="t-meta">
+        <span class="t-title">Technical Sourcing Recruiter</span>
+        <span class="t-co">Amazon Web Services (AWS)</span>
+        <span class="t-date">Sep 2018 – Feb 2022 · Herndon, VA</span>
+      </div>
+      <ul class="t-list">
+        <li>Started as a contractor on the security applications team. Converted to full-time based on performance.</li>
+        <li>Built an Outlook–ATS automation that reduced manual tracking overhead for the team.</li>
+        <li>First to place two candidates within the first month. Highest candidate acceptance rate on the team.</li>
+        <li>Filled senior SDE, SDM, TPM, and data science roles end-to-end with hiring managers.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs">
+  <div class="s-label reveal">Education</div>
+  <div class="certs-row reveal">
+    <div class="cert">
+      <div class="cert-badge">🤖</div>
+      <div>
+        <div class="cert-name">AI Engineering & Prompt Engineering</div>
+        <div class="cert-issuer">Databricks</div>
+        <div class="cert-year">2026</div>
+      </div>
+    </div>
+    <div class="cert">
+      <div class="cert-badge">⚡</div>
+      <div>
+        <div class="cert-name">Full Stack Engineer Career Path</div>
+        <div class="cert-issuer">Codecademy</div>
+        <div class="cert-year">2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="chroma-bar reveal"></div>
+    <div class="s-label reveal" style="justify-content:center">Contact</div>
+    <h2 class="s-title reveal" style="margin-bottom:20px">Available now.</h2>
+    <p class="contact-sub reveal">Looking for a full-time frontend role.<br>Open to relocation. Happy to talk.</p>
+    <div class="c-links reveal">
+      <a href="mailto:itsmargaretnorthup@gmail.com" class="c-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        Email
+      </a>
+      <a href="https://linkedin.com/in/margarettt" target="_blank" class="c-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://github.com/margaretnorthup" target="_blank" class="c-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="https://lnkd.in/eVC4cCnS" target="_blank" class="c-link">📅 Book a Call</a>
+      <a href="https://margaretnorthup1.github.io/" target="_blank" class="c-link">🌐 Portfolio</a>
+    </div>
+    <div class="relo reveal">📍 Franklin, TN · Open to relocation</div>
+  </div>
+</section>
+
+<footer>
+  <span>Margaret Northup · Frontend Developer</span>
+  <a href="https://github.com/margaretnorthup" target="_blank">github.com/margaretnorthup</a>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const trail  = document.getElementById('cursor-trail');
+let tx=0,ty=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{
+  tx=e.clientX; ty=e.clientY;
+  cursor.style.left=tx+'px'; cursor.style.top=ty+'px';
+});
+setInterval(()=>{
+  cx+=(tx-cx)*.15; cy+=(ty-cy)*.15;
+  trail.style.left=cx+'px'; trail.style.top=cy+'px';
+},16);
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cursor.style.transform='translate(-50%,-50%) scale(2)'; cursor.style.background='var(--magenta)'; });
+  el.addEventListener('mouseleave',()=>{ cursor.style.transform='translate(-50%,-50%) scale(1)'; cursor.style.background='var(--pink)'; });
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.classList.add('visible');
+    if(e.target.classList.contains('timeline'))
+      e.target.querySelectorAll('.t-item').forEach((item,i)=>
+        setTimeout(()=>item.classList.add('visible'),i*100)
+      );
+  });
+},{threshold:.08});
+document.querySelectorAll('.reveal,.timeline').forEach(el=>obs.observe(el));
+
+// Active nav
+const secs=document.querySelectorAll('section[id]');
+const navAs=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{ if(window.scrollY>=s.offsetTop-180) cur=s.id; });
+  navAs.forEach(a=>{ a.style.color=a.getAttribute('href')==='#'+cur?'var(--text)':''; });
+});
+</script>
+</body>
+</html>
